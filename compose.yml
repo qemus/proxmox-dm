@@ -1,1 +1,10 @@
-
+services:
+  proxmox:
+    hostname: proxmox
+    image: dockurr/proxmox
+    container_name: proxmox
+    ports:
+      - 8006:8006
+    restart: always
+    privileged: true
+    stop_grace_period: 1m
