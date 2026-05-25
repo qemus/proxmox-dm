@@ -91,7 +91,7 @@ RUN set -Eeuo pipefail && \
       /usr/share/doc \
       /usr/share/man && \
     # Set username and password
-    printf '%s:%s\n' "$USERNAME" "$PASSWORD" | chpasswd && \
+    echo "root:root" | chpasswd && \
     # Store version number
     echo "$VERSION_ARG" > /run/version && \
     # Cleanup files
