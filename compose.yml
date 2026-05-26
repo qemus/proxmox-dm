@@ -7,6 +7,8 @@ services:
       PASSWORD: "root"
     ports:
       - 8006:8006
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock      
     restart: always
     privileged: true
     stop_grace_period: 1m
