@@ -34,8 +34,8 @@ services:
     ports:
       - 8006:8006
     volumes:
-      - ./config:/etc/pve
       - ./storage:/var/lib/vz
+      - ./config:/var/lib/pve-cluster
       - /var/run/docker.sock:/var/run/docker.sock
     restart: always
     privileged: true
@@ -45,7 +45,7 @@ services:
 ##### Via Docker CLI:
 
 ```bash
-docker run -it --rm --name proxmox --hostname pve --privileged -e "PASSWORD=root" -p 8006:8006 -v "${PWD:-.}/config:/etc/pve" -v "${PWD:-.}/storage:/var/lib/vz" -v "/var/run/docker.sock:/var/run/docker.sock" --stop-timeout 60 docker.io/dockurr/proxmox
+docker run -it --rm --name proxmox --hostname pve --privileged -e "PASSWORD=root" -p 8006:8006 -v "${PWD:-.}/storage:/var/lib/vz" -v "${PWD:-.}/config:/var/lib/pve-cluster" -v "/var/run/docker.sock:/var/run/docker.sock" --stop-timeout 60 docker.io/dockurr/proxmox
 ```
 
 ##### Via Github Codespaces:
@@ -83,18 +83,18 @@ docker run -it --rm --name proxmox --hostname pve --privileged -e "PASSWORD=root
     - ./storage:/var/lib/vz
   ```
 
-  Replace the example path `./storage` with the desired storage folder or named volume. All large files (like disks and images) will be stored here.
+  Replace the example path `./storage` with the desired storage folder or named volume. All large objects (like disk files and .iso images) will be stored here.
 
-### How do I change the location of the settings files?
+### How do I change the location of the configuration database?
 
-  To change the location for the Proxmox settings and configuration files, include the following bind mount in your compose file:
+  To change the location for the Proxmox VE configuration database, include the following bind mount in your compose file:
   
   ```yaml
   volumes:
-    - ./config:/etc/pve
+    - ./config:/var/lib/pve-cluster
   ```
 
-  Replace the example path `./config` with the desired storage folder or named volume. All small files (like your configuration files) will go here.
+  Replace the example path `./config` with the desired storage folder or named volume.
 
 ### How can I setup networking for the virtual machines?
 
