@@ -92,14 +92,14 @@ docker run -it --rm --name proxmox --hostname pve --privileged -e "PASSWORD=root
 
 ### How do I change the location of the storage pool?
 
-  To change the storage location for the `local` storage pool used by Proxmox, include the following bind mount in your compose file:
+  To change the location for the `local` storage pool used by Proxmox to store large objects like disk images and .iso files, include the following bind mount in your compose file:
 
   ```yaml
   volumes:
     - ./storage:/var/lib/vz
   ```
 
-  Replace the example path `./storage` with the desired storage folder or named volume. All large objects (like disk images and .iso files) will be stored here.
+  Replace the example path `./storage` with the desired storage folder or named volume.
 
 ### How do I change the location of the configuration data?
 
