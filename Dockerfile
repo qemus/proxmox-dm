@@ -134,6 +134,13 @@ rm -rf /root/.gnupg
 # Configure LXC
 sed -i 's/^ConditionVirtualization=!container/#&/' /lib/systemd/system/lxcfs.service
 
+# Set listening socket to IPv4 instead of IPv6
+echo "LISTEN_IP=\"0.0.0.0\"" >> /etc/default/pveproxy
+
+# Update PVE banner to display the IPv4 address
+sed -i "s|https://\${urlip}:8006/|http://localhost:8006|g" /usr/bin/pvebanner
+sed -i "s|Welcome to the Proxmox Virtual Environment\.|Welcome to Proxmox for Docker v${VERSION_ARG}.|g" /usr/bin/pvebanner
+
 # Remove kernel modules and boot files — useless in a container (~960 MB)
 rm -rf /usr/lib/modules /boot
 
