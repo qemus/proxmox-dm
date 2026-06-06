@@ -28,17 +28,17 @@ Proxmox Datacenter Manager inside a Docker container.
 
 ```yaml
 services:
-  proxmox:
-    hostname: pve
-    image: dockurr/proxmox
-    container_name: proxmox
+  pdm:
+    hostname: pdm
+    container_name: pdm
+    image: dockurr/proxmox-dm
     environment:
       PASSWORD: "root"
     ports:
-      - 8006:8006
+      - 8443:8443
     volumes:
-      - ./storage:/var/lib/vz
-      - ./config:/var/lib/pve-cluster
+      - ./pdm:/etc/proxmox-datacenter-manager
+      - ./config:/var/lib/proxmox-datacenter-manager
     restart: always
     privileged: true
     stop_grace_period: 2m
@@ -47,7 +47,7 @@ services:
 ##### Via Docker CLI:
 
 ```bash
-docker run -it --rm --name proxmox --hostname pve --privileged -e "PASSWORD=root" -p 8006:8006 -v "${PWD:-.}/storage:/var/lib/vz" -v "${PWD:-.}/config:/var/lib/pve-cluster" --stop-timeout 120 docker.io/dockurr/proxmox
+docker run -it --rm --name pdm --hostname pdm --privileged -e "PASSWORD=root" -p 8443:8443 -v "${PWD:-.}/pdm:/etc/proxmox-datacenter-manager" -v "${PWD:-.}/config:/var/lib/proxmox-datacenter-manager" --stop-timeout 120 docker.io/dockurr/proxmox-dm
 ```
 
 ##### Via Github Codespaces:
@@ -75,33 +75,23 @@ docker run -it --rm --name proxmox --hostname pve --privileged -e "PASSWORD=root
 
   Very simple! These are the steps:
   
-  - Start the container and connect to [port 8006](http://127.0.0.1:8006/) using your web browser.
+  - Start the container and connect to [port 8443](http://127.0.0.1:8443/) using your web browser.
 
   - Login using the username `root` and the password you specified in the `PASSWORD` environment variable.
   
-  Enjoy your time with your brand new Proxmox installation, and don't forget to star this repo!
-
-### How do I change the location of the storage pool?
-
-  To change the location for the `local` storage pool used by Proxmox to store large objects like disk images and .iso files, include the following bind mount in your compose file:
-
-  ```yaml
-  volumes:
-    - ./storage:/var/lib/vz
-  ```
-
-  Replace the example path `./storage` with the desired storage folder or named volume.
+  Enjoy your time with your brand new Proxmox Datacenter Manager installation, and don't forget to star this repo!
 
 ### How do I change the location of the configuration data?
 
-  To change the location of your Proxmox VE configuration data, include the following bind mount in your compose file:
+  To change the location of your Proxmox VE configuration data, include the following two bind mounts in your compose file:
   
   ```yaml
-  volumes:
-    - ./config:/var/lib/pve-cluster
+volumes:
+  - ./pdm:/etc/proxmox-datacenter-manager
+  - ./config:/var/lib/proxmox-datacenter-manager
   ```
 
-  Replace the example path `./config` with the desired storage folder or named volume.
+  Replace the example paths `./pdm` and `./config` with the desired storage folder or named volume.
 
 ### How do I verify if my system supports the KVM virtualization used by Proxmox?
 
