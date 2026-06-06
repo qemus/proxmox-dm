@@ -70,11 +70,11 @@ docker run -it --rm --name pdm --hostname pdm --privileged -e "PASSWORD=root" -p
 
   - Login using the username `root` and the password you specified in the `PASSWORD` environment variable.
   
-  Enjoy your time with your brand new Proxmox Datacenter Manager installation, and don't forget to star this repo!
+  Enjoy your time with your brand new Proxmox Datacenter Manager, and don't forget to star this repo!
 
 ### How do I change the location of the configuration data?
 
-  To change the location of your Proxmox VE configuration data, include the following two bind mounts in your compose file:
+  To change the location of the configuration data, include the following two bind mounts in your compose file:
   
   ```yaml
 volumes:
