@@ -70,7 +70,7 @@ fi
 
 # Fix permissions
 
-DIR="/etc/promox-datacenter-manager"
+DIR="/etc/proxmox-datacenter-manager"
 uid=$(stat -c '%u' "$DIR")
 
 if [ "$uid" -eq 0 ]; then
