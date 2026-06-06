@@ -15,11 +15,11 @@ Proxmox Datacenter Manager inside a Docker container.
 
 ## Features ✨
 
-- **Centralized management** — Manage any number of PVE nodes using a modern web-interface
+- **Centralized management** — Manage any number of [Proxmox VE](https://github.com/dockur/proxmox/) nodes using a modern web-interface
 - **Resource monitoring** — A global dashboard visualizes the state of every node, highlighting potential issues
 - **Easy backups** — Stores all your configuration in a volume mount, for easy backup and restore
 - **Task aggregation** — Centralized access to task logs across the entire infrastructure for auditing and troubleshooting
-- **Cross-cluster migration** — : Execute live migrations of virtual guests between nodes
+- **Cross-cluster migration** — Execute live migrations of virtual guests between nodes
 - **Update management** — Monitor available updates and security patches across the whole fleet
 
 ## Usage  🐳
@@ -37,8 +37,8 @@ services:
     ports:
       - 8443:8443
     volumes:
-      - ./pdm:/etc/proxmox-datacenter-manager
-      - ./config:/var/lib/proxmox-datacenter-manager
+      - ./config:/etc/proxmox-datacenter-manager
+      - ./pdm:/var/lib/proxmox-datacenter-manager
     restart: always
     privileged: true
     stop_grace_period: 2m
@@ -47,7 +47,7 @@ services:
 ##### Via Docker CLI:
 
 ```bash
-docker run -it --rm --name pdm --hostname pdm --privileged -e "PASSWORD=root" -p 8443:8443 -v "${PWD:-.}/pdm:/etc/proxmox-datacenter-manager" -v "${PWD:-.}/config:/var/lib/proxmox-datacenter-manager" --stop-timeout 120 docker.io/dockurr/proxmox-dm
+docker run -it --rm --name pdm --hostname pdm --privileged -e "PASSWORD=root" -p 8443:8443 -v "${PWD:-.}/config:/etc/proxmox-datacenter-manager" -v "${PWD:-.}/pdm:/var/lib/proxmox-datacenter-manager" --stop-timeout 120 docker.io/dockurr/proxmox-dm
 ```
 
 ##### Via Github Codespaces:
@@ -78,11 +78,15 @@ docker run -it --rm --name pdm --hostname pdm --privileged -e "PASSWORD=root" -p
   
   ```yaml
 volumes:
-  - ./pdm:/etc/proxmox-datacenter-manager
-  - ./config:/var/lib/proxmox-datacenter-manager
+  - ./config:/etc/proxmox-datacenter-manager
+  - ./pdm:/var/lib/proxmox-datacenter-manager
   ```
 
   Replace the example paths `./pdm` and `./config` with the desired storage folders or named volumes.
+
+### Is there also Proxmox VE in a container?
+
+  Yes, see our [dockur/proxmox](https://github.com/dockur/proxmox) repository.
 
 ### How do I verify if my system supports the KVM virtualization used by Proxmox?
 
