@@ -25,22 +25,26 @@ apt-get --no-install-recommends -y install \
 apt-get clean
 rm -rf /var/lib/apt/lists/*
 
-# Add Proxmox Datacenter Manager archive keyring
-KEY_URL="https://enterprise.proxmox.com/debian/proxmox-archive-keyring-trixie.gpg"
-KEY_PATH="/usr/share/keyrings/proxmox-archive-keyring.gpg"
-URI="http://download.proxmox.com/debian/pdm"
-SUITE="trixie"
-COMPONENT="pdm-no-subscription"
+# Add Proxmox Datacenter Manager repository
+RUN <<EOF
+curl -sL https://enterprise.proxmox.com/debian/proxmox-archive-keyring-trixie.gpg \
+    -o /usr/share/keyrings/proxmox-archive-keyring.gpg
+EOF
 
-curl -fsSL "${KEY_URL}" -o "${KEY_PATH}"
-
-cat > /etc/apt/sources.list.d/pdm.sources <<SOURCES
+COPY <<EOF /etc/apt/sources.list.d/pdm-no-subs.sources
 Types: deb
-URIs: ${URI}
-Suites: ${SUITE}
-Components: ${COMPONENT}
-Signed-By: ${KEY_PATH}
-SOURCES
+URIs: http://download.proxmox.com/debian/pdm
+Suites: trixie
+Components: pdm-no-subscription
+Signed-By: /usr/share/keyrings/proxmox-archive-keyring.gpg
+EOF
+
+# Block unneeded packages in container
+COPY <<EOF /etc/apt/preferences.d/99-pdm-unneeded-packages
+Package: proxmox-default-kernel proxmox-kernel-* pve-firmware
+Pin: release *
+Pin-Priority: -1
+EOF
 
 # Update system and install Proxmox Datacenter Manager
 apt-get update
