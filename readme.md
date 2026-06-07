@@ -75,7 +75,7 @@ docker run -it --rm --name pdm --hostname pdm --privileged -e "PASSWORD=root" -p
 ### How do I change the location of the configuration data?
 
   To change the location of the configuration data, include the following two bind mounts in your compose file:
-  
+
   ```yaml
 volumes:
   - ./config:/etc/proxmox-datacenter-manager
