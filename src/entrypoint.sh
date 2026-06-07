@@ -163,8 +163,12 @@ cleanup() {
     kill -TERM "$PRIV_API_PID" 2>/dev/null || :
   fi
 
+  if [[ -n "${RSYSLOG_PID:-}" ]] && kill -0 "$RSYSLOG_PID" 2>/dev/null; then
+    kill -TERM "$RSYSLOG_PID" 2>/dev/null || :
+  fi
+
   # Wait for processes
-  wait -n "${PRIV_API_PID:-}" "${API_PID:-}" 2>/dev/null || :
+  wait -n "${PRIV_API_PID:-}" "${API_PID:-} ${RSYSLOG_PID:-}" 2>/dev/null || :
 
   echo ""
   echo "Shutdown completed successfully."
