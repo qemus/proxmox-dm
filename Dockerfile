@@ -132,40 +132,6 @@ ExecStart=
 ExecStart=/bin/true
 IUD
 
-# Remove kernel modules and boot files — useless in a container (~960 MB)
-rm -rf /usr/lib/modules /boot
-
-# Remove hardware firmware blobs — no physical hardware in a container (~520 MB)
-rm -rf /usr/lib/firmware
-
-# Remove GPU/display/media libs — no display server, no GPU passthrough needed
-rm -f \
-  /usr/lib/*/libLLVM*.so* \
-  /usr/lib/*/libgallium*.so* \
-  /usr/lib/*/libvulkan_*.so* \
-  /usr/lib/*/libz3.so* \
-  /usr/lib/*/libx265.so* \
-  /usr/lib/*/libcodec2.so* \
-  /usr/lib/*/libavcodec.so* \
-  /usr/lib/*/libavfilter.so* \
-  /usr/lib/*/libSvtAv1Enc.so* \
-  /usr/lib/*/libplacebo.so*
-
-rm -rf \
-  /usr/lib/*/dri \
-  /usr/lib/*/gstreamer-1.0
-
-# Remove share assets not needed at runtime
-rm -rf \
-  /usr/share/pocketsphinx \
-  /usr/share/X11 \
-  /usr/share/alsa \
-  /usr/share/fonts \
-  /usr/share/grub \
-  /usr/share/groff \
-  /usr/share/mime \
-  /usr/share/man
-
 # Set username and password
 echo "root:root" | chpasswd
 
