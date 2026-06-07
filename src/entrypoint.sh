@@ -95,6 +95,13 @@ dir="/var/log/proxmox-datacenter-manager"
 mkdir -p "$dir"
 chown "root:$user" "$dir" || :
 
+dir="/run/proxmox-datacenter-manager"
+mkdir -p "$dir/shmem"
+chmod 1770 "$dir" || :
+chown "root:$user" "$dir" || :
+chown "root:root" "$dir/shmem" || :
+mount -t tmpfs -o rw tmpfs "$dir/shmem"
+
 # Generate keys
 keys="/etc/proxmox-datacenter-manager/auth"
 
@@ -125,9 +132,20 @@ if [ ! -f "$keys/api.key" ] || [ ! -f "$keys/api.pem" ]; then
   chown "root:$user" "$keys/api.pem"
 fi
 
+_trap() {
+  local func="$1"; shift
+  local sig
+  TRAP_PID=$BASHPID
+
+  for sig; do
+    trap "$func $sig" "$sig"
+  done
+}
+
 cleanup() {
 
   [ -f /proxmox.end ] && return 0
+  [[ $BASHPID != "$TRAP_PID" ]] && return 0
 
   touch /proxmox.end
   echo "Shutting down PDM services..."
@@ -144,13 +162,14 @@ cleanup() {
   # Wait for processes
   wait -n "${PRIV_API_PID:-}" "${API_PID:-}" 2>/dev/null || :
 
+  echo ""
   echo "Shutdown completed successfully."
   exit 0
 }
 
 # Init trap
 rm -f /proxmox.end
-trap cleanup SIGTERM SIGINT
+_trap cleanup SIGTERM SIGINT
 
 # Start PDM Services
 dir="/usr/libexec/proxmox"
@@ -173,14 +192,17 @@ if [[ ! -S "$sock" ]]; then
 fi
 
 echo "Starting proxmox-datacenter-api as $user on port ${PORT:-8443}..."
-su -s /bin/bash -c "$dir/proxmox-datacenter-api" www-data &
+msg="failed to collect blockdev statistics for "
+
+runuser -u www-data -- \
+    "$dir/proxmox-datacenter-api" \
+    2> >(grep -v "$msg" >&2) &
 API_PID=$!
 
 echo ""
 info "------------------------------------------------------------------------------"
 info ""
-info ". Welcome to the Proxmox Datacenter Manager. Please use your web browser to
-configure this server - connect to:"
+info ". Welcome to the Proxmox Datacenter Manager v$(</etc/version). Connect your web browser to:"
 info ""
 info ".   https://127.0.0.1:${PORT:-8443}"
 info ""
