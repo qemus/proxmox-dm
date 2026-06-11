@@ -90,7 +90,7 @@ volumes:
 
 ## Acknowledgements 🙏
 
-Special thanks to [willmortimer](https://github.com/willmortimer) and [LongQT-sea](https://github.com/LongQT-sea), this project would not exist without their invaluable work.
+Special thanks to [willmortimer](https://github.com/willmortimer), [wofferl](https://github.com/wofferl) and [LongQT-sea](https://github.com/LongQT-sea), this project would not exist without their invaluable work.
 
 ## Stars 🌟
 [![Stars](https://starchart.cc/dockur/proxmox-dm.svg?variant=adaptive)](https://starchart.cc/dockur/proxmox-dm)
